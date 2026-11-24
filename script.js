@@ -14,24 +14,29 @@ readyLink?.addEventListener('click', () => {
     }
 });
 
-const whLink = document.querySelector('#wh-link');
-const whDialog = document.querySelector('#wh-dialog');
-
-if (whLink && whDialog?.showModal) {
-    whLink.addEventListener('click', (event) => {
+for (const link of document.querySelectorAll('[data-dialog]')) {
+    const dialog = document.getElementById(link.dataset.dialog);
+    if (!dialog?.showModal) continue;
+    link.addEventListener('click', (event) => {
         event.preventDefault();
-        whDialog.showModal();
+        dialog.showModal();
     });
 }
 
 const duelForm = document.querySelector('#duel-form');
 
 if (duelForm) {
+    function picker(panel) {
+        return {
+            heading: panel.querySelector('.duel-activity'),
+            select: panel.querySelector('select'),
+            help: panel.querySelector('.activity-help'),
+            message: panel.querySelector('.activity-message'),
+        };
+    }
+
     const sides = Array.from(duelForm.querySelectorAll('.duel-side'), (side) => ({
-        heading: side.querySelector('.duel-activity'),
-        select: side.querySelector('select'),
-        help: side.querySelector('.activity-help'),
-        message: side.querySelector('.activity-message'),
+        ...picker(side),
         chart: side.querySelector('.duel-chart'),
         bar: side.querySelector('.energy-bar'),
         value: side.querySelector('.energy-value'),
@@ -41,14 +46,17 @@ if (duelForm) {
     const numberFormat = new Intl.NumberFormat('fr-CA', { maximumFractionDigits: 10 });
     const decimalFactorFormat = new Intl.NumberFormat('fr-CA', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
     const integerFactorFormat = new Intl.NumberFormat('fr-CA', { maximumFractionDigits: 0 });
+    const smallEmissionFormat = new Intl.NumberFormat('fr-CA', { maximumSignificantDigits: 1 });
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const richSelect = CSS.supports('appearance', 'base-select') && CSS.supports('selector(::picker(select))');
     let animations = [];
 
     const preset = duelForm.hasAttribute('data-preset');
+    const pollution = duelForm.hasAttribute('data-pollution');
+    const matchups = pollution ? pollutionMatchups : preset ? duelMatchups : [];
     const requested = Number(new URLSearchParams(window.location.search).get('duel'));
-    const duelNumber = preset && duelMatchups[requested - 1] ? requested : 1;
-    const matchup = preset ? duelMatchups[duelNumber - 1] : [];
+    const duelNumber = matchups[requested - 1] ? requested : 1;
+    const matchup = matchups[duelNumber - 1] ?? [];
     const storageKey = `${duelStoragePrefix}${duelNumber}:${JSON.stringify(matchup)}`;
     let saved;
 
@@ -58,11 +66,12 @@ if (duelForm) {
         } catch {
             // Comparisons still work when the browser blocks session storage.
         }
-
+    }
+    if (matchups.length) {
         for (const [direction, offset] of [['previous', -1], ['next', 1]]) {
             const arrow = document.querySelector(`#duel-${direction}`);
             const target = duelNumber + offset;
-            if (duelMatchups[target - 1]) {
+            if (matchups[target - 1]) {
                 arrow.href = `?duel=${target}`;
             } else {
                 arrow.setAttribute('aria-disabled', 'true');
@@ -77,22 +86,20 @@ if (duelForm) {
         side.help.open = false;
     }
 
-    for (const [sideIndex, side] of sides.entries()) {
+    function configurePicker(side, entries, id, defaultIndex, savedId) {
         const { select, heading } = side;
-        const id = matchup[sideIndex] ?? 'any';
-
         if (id.toLowerCase() !== 'any') {
-            side.fixedActivity = activities.find((activity) => activity[3] === id);
+            const entry = entries.find((activity) => activity[3] === id);
             heading.querySelector('img').src = `images/${id}.png`;
-            heading.querySelector('span').textContent = side.fixedActivity[0];
-            updateHelp(side, side.fixedActivity);
-            continue;
+            heading.querySelector('span').textContent = entry[0];
+            updateHelp(side, entry);
+            return () => entry;
         }
 
         if (heading) heading.hidden = true;
         select.hidden = false;
         select.disabled = false;
-        for (const [description, , , activityId] of activities) {
+        for (const [description, , , activityId] of entries) {
             const option = new Option(description, activityId);
             if (richSelect) {
                 const icon = document.createElement('img');
@@ -103,11 +110,13 @@ if (duelForm) {
             }
             select.add(option);
         }
-        const savedIndex = activities.findIndex((activity) => activity[3] === saved?.ids?.[sideIndex]);
-        select.selectedIndex = savedIndex < 0 ? sideIndex : savedIndex;
+        const savedIndex = entries.findIndex((activity) => activity[3] === savedId);
+        select.selectedIndex = savedIndex < 0 ? defaultIndex : savedIndex;
+
+        const selection = () => entries[select.selectedIndex];
 
         function updateSelection() {
-            const activity = activities[select.selectedIndex];
+            const activity = selection();
             if (!richSelect) {
                 select.style.setProperty('--activity-icon', `url("images/${activity[3]}.png")`);
             }
@@ -116,10 +125,19 @@ if (duelForm) {
 
         updateSelection();
         select.addEventListener('change', updateSelection);
+        return selection;
     }
 
+    const pollutionActivity = pollution
+        ? configurePicker(picker(duelForm.querySelector('.pollution-activity')), activities, matchup[0], 0)
+        : null;
+    const choices = pollution ? electricitySources : activities;
+    const sourceIds = pollution ? matchup.slice(1) : matchup;
+    const selections = sides.map((side, index) =>
+        configurePicker(side, choices, sourceIds[index] ?? 'any', index, saved?.ids?.[index]));
+
     function selectedActivities() {
-        return sides.map(({ fixedActivity, select }) => fixedActivity ?? activities[select.selectedIndex]);
+        return selections.map((selection) => selection());
     }
 
     function saveComparison(compared) {
@@ -153,7 +171,9 @@ if (duelForm) {
     async function showComparison(animate) {
         clearComparison();
 
-        const quantities = selectedActivities().map((activity) => activity[1]);
+        const quantities = selectedActivities().map((activity) => pollution
+            ? activity[1] * (pollutionActivity()[1] / 1000)
+            : activity[1]);
         const minimum = Math.min(...quantities);
         const maximum = Math.max(...quantities) || 1;
         const comparison = animations;
@@ -176,13 +196,24 @@ if (duelForm) {
         }
         if (comparison === animations) {
             for (const [index, { value, bike }] of sides.entries()) {
-                const wattHours = quantities[index];
-                value.textContent = `${numberFormat.format(wattHours)}\u00a0Wh`;
+                const quantity = quantities[index];
+                const unit = pollution ? 'gCO₂e' : 'Wh';
+                let quantityFormat = numberFormat;
+                if (pollution) {
+                    if (quantity >= 3) {
+                        quantityFormat = integerFactorFormat;
+                    } else if (quantity > 0 && quantity < 1) {
+                        quantityFormat = smallEmissionFormat;
+                    } else {
+                        quantityFormat = decimalFactorFormat;
+                    }
+                }
+                value.textContent = `${quantityFormat.format(quantity)}\u00a0${unit}`;
                 if (bike) {
                     // À 60 W, une minute de vélo correspond à 1 Wh.
-                    const duration = wattHours < 1
-                        ? `${Math.round(wattHours * 60)}\u00a0s`
-                        : `${integerFactorFormat.format(wattHours)}\u00a0min`;
+                    const duration = quantity < 1
+                        ? `${Math.round(quantity * 60)}\u00a0s`
+                        : `${integerFactorFormat.format(quantity)}\u00a0min`;
                     bike.textContent = `≈ ${duration}`;
                 }
             }
@@ -191,7 +222,9 @@ if (duelForm) {
                 const quotient = maximum / minimum;
                 const ratio = (quotient >= 3 ? integerFactorFormat : decimalFactorFormat).format(quotient);
                 factor.textContent = `${ratio}x`;
-                factor.setAttribute('aria-label', `${ratio} fois l’énergie de l’autre activité`);
+                factor.setAttribute('aria-label', pollution
+                    ? `${ratio} fois les émissions de l’autre source`
+                    : `${ratio} fois l’énergie de l’autre activité`);
                 factor.hidden = false;
             }
         }

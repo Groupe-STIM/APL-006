@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Même énergie, même pollution&nbsp;?</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="activites.js" defer></script>
+    <script src="pollution.js" defer></script>
+    <script src="script.js" defer></script>
+</head>
+<body class="duel-page">
+    <main class="duel">
+        <h1>Même énergie, même pollution&nbsp;?</h1>
+        <form class="duel-columns" id="duel-form" data-pollution>
+            <div class="pollution-activity">
+                <div class="activity-picker">
+                    <h2 class="duel-activity"><img class="activity-icon" alt=""><span></span></h2>
+                    <select hidden disabled aria-label="Activité" required>
+                        <button type="button"><selectedcontent></selectedcontent></button>
+                    </select>
+                    <details class="activity-help" hidden>
+                        <summary aria-label="Détails sur l’activité">?</summary>
+                        <div class="activity-message"></div>
+                    </details>
+                </div>
+            </div>
+            <section class="duel-side" aria-label="Côté gauche">
+                <div class="activity-picker">
+                    <h2 class="duel-activity" id="duel-left"><img class="activity-icon" alt=""><span></span></h2>
+                    <select hidden disabled id="source-left" aria-label="Source d’électricité de gauche" required>
+                        <button type="button"><selectedcontent></selectedcontent></button>
+                    </select>
+                    <details class="activity-help" hidden>
+                        <summary aria-label="Détails sur la source de gauche">?</summary>
+                        <div class="activity-message"></div>
+                    </details>
+                </div>
+                <div class="duel-chart">
+                    <div class="energy-bar" aria-hidden="true"></div>
+                    <output class="energy-value" aria-label="Émissions du côté gauche"></output>
+                    <div class="energy-factor"><output class="energy-factor-badge" hidden></output></div>
+                </div>
+            </section>
+            <section class="duel-side" aria-label="Côté droit">
+                <div class="activity-picker">
+                    <h2 class="duel-activity" id="duel-right"><img class="activity-icon" alt=""><span></span></h2>
+                    <select hidden disabled id="source-right" aria-label="Source d’électricité de droite" required>
+                        <button type="button"><selectedcontent></selectedcontent></button>
+                    </select>
+                    <details class="activity-help" hidden>
+                        <summary aria-label="Détails sur la source de droite">?</summary>
+                        <div class="activity-message"></div>
+                    </details>
+                </div>
+                <div class="duel-chart">
+                    <div class="energy-bar" aria-hidden="true"></div>
+                    <output class="energy-value" aria-label="Émissions du côté droit"></output>
+                    <div class="energy-factor"><output class="energy-factor-badge" hidden></output></div>
+                </div>
+            </section>
+            <button class="primary-button duel-compare" type="submit">Comparer</button>
+        </form>
+        <nav class="duel-navigation" aria-label="Navigation entre les comparaisons">
+            <a class="duel-arrow" id="duel-previous" aria-label="Comparaison précédente">←</a>
+            <a class="duel-arrow" id="duel-next" aria-label="Comparaison suivante">→</a>
+        </nav>
+    </main>
+</body>
+</html>
