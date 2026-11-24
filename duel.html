@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Le duel énergétique</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body class="duel-page">
+    <main class="duel duel-intro">
+        <h1>Le duel énergétique</h1>
+        <img src="images/scale.png" alt="Balance à deux plateaux">
+        <p>Laquelle de ces activités numériques consomme le plus d’énergie (<a id="wh-link" href="images/Wh.png" aria-haspopup="dialog">Wh</a>)&nbsp;?</p>
+        <a class="primary-button duel-ready" href="duels.html?duel=1">Je suis prêt</a>
+        <dialog class="wh-dialog" id="wh-dialog" aria-label="Le wattheure (Wh)">
+            <form method="dialog">
+                <button type="submit" autofocus>Fermer</button>
+            </form>
+            <img src="images/Wh.png" alt="Illustration explicative du wattheure (Wh)" width="1672" height="941">
+        </dialog>
+    </main>
+</body>
+</html>

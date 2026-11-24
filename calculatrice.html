@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Le duel énergétique</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="activites.js" defer></script>
+    <script src="script.js" defer></script>
+</head>
+<body class="duel-page">
+    <main class="duel">
+        <h1>Le duel énergétique</h1>
+        <form class="duel-columns" id="duel-form">
+            <section class="duel-side" aria-label="Côté gauche">
+                <div class="activity-picker">
+                    <select id="activity-left" aria-label="Activité de gauche" required>
+                        <button type="button"><selectedcontent></selectedcontent></button>
+                    </select>
+                    <details class="activity-help" hidden>
+                        <summary aria-label="Détails sur l’activité de gauche">?</summary>
+                        <div class="activity-message"></div>
+                    </details>
+                </div>
+                <div class="duel-chart">
+                    <div class="energy-bar" aria-hidden="true"></div>
+                    <output class="energy-value" for="activity-left"></output>
+                </div>
+            </section>
+            <section class="duel-side" aria-label="Côté droit">
+                <div class="activity-picker">
+                    <select id="activity-right" aria-label="Activité de droite" required>
+                        <button type="button"><selectedcontent></selectedcontent></button>
+                    </select>
+                    <details class="activity-help" hidden>
+                        <summary aria-label="Détails sur l’activité de droite">?</summary>
+                        <div class="activity-message"></div>
+                    </details>
+                </div>
+                <div class="duel-chart">
+                    <div class="energy-bar" aria-hidden="true"></div>
+                    <output class="energy-value" for="activity-right"></output>
+                </div>
+            </section>
+            <button class="primary-button duel-compare" type="submit">Comparer</button>
+        </form>
+    </main>
+</body>
+</html>

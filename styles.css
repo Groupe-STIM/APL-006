@@ -1,0 +1,436 @@
+:root {
+    --estime-blue: #36c1cc;
+    --estime-purple: #512873;
+    --estime-yellow: #fed13f;
+}
+
+body {
+    margin: 0;
+    background-color: #fff;
+}
+
+.welcome-page {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    min-height: 100vh;
+    min-height: 100svh;
+    padding-inline: 24px;
+    background-color: #f6f7fb;
+    color: #18202f;
+    font-family: Inter, system-ui, sans-serif;
+    text-align: center;
+}
+
+.welcome-header img {
+    display: block;
+    width: min(460px, 100%);
+    height: auto;
+    margin-inline: auto;
+}
+
+.welcome-content {
+    align-self: center;
+    padding-bottom: clamp(32px, 12vh, 120px);
+}
+
+.welcome-content h1 {
+    margin: 0;
+    font-size: clamp(2rem, 6vw, 4rem);
+    line-height: 1.1;
+}
+
+.welcome-content p {
+    margin: 16px 0 28px;
+    color: #46546b;
+    font-size: clamp(1rem, 2.7vw, 1.35rem);
+}
+
+.primary-button {
+    display: inline-grid;
+    min-height: 54px;
+    place-items: center;
+    padding-inline: 26px;
+    border-radius: 8px;
+    background-color: var(--estime-blue);
+    color: #18202f;
+    font-weight: 800;
+    text-decoration: none;
+    box-shadow: 0 12px 24px rgba(54, 193, 204, 0.24);
+}
+
+.primary-button:hover {
+    background-color: #2eb2bd;
+}
+
+.primary-button:focus-visible {
+    outline: 3px solid #18202f;
+    outline-offset: 4px;
+}
+
+.welcome-content .primary-button {
+    margin-top: clamp(24px, 6vh, 64px);
+    min-height: 72px;
+    padding-inline: clamp(36px, 8vw, 64px);
+    font-size: clamp(1.5rem, 4vw, 2rem);
+}
+
+.duel-page {
+    min-height: 100vh;
+    background: #f6f7fb;
+    color: #18202f;
+    font-family: Inter, system-ui, sans-serif;
+}
+
+.duel {
+    max-width: 1080px;
+    margin-inline: auto;
+    padding: clamp(24px, 5vw, 64px) clamp(12px, 4vw, 32px);
+}
+
+.duel h1 {
+    margin: 0 0 clamp(24px, 5vw, 48px);
+    font-size: clamp(2rem, 6vw, 4rem);
+    text-align: center;
+}
+
+.duel-intro {
+    text-align: center;
+}
+
+.duel-intro > img {
+    display: block;
+    width: min(100%, 440px);
+    max-height: 42vh;
+    object-fit: contain;
+    margin-inline: auto;
+}
+
+.wh-dialog {
+    box-sizing: border-box;
+    width: min(900px, calc(100% - 32px));
+    padding: 16px;
+    border: 0;
+    border-radius: 12px;
+}
+
+.wh-dialog::backdrop {
+    background: rgb(24 32 47 / 65%);
+}
+
+.wh-dialog form {
+    margin-bottom: 12px;
+    text-align: right;
+}
+
+.wh-dialog button {
+    padding: 8px 14px;
+    border: 1px solid #8a96a8;
+    border-radius: 8px;
+    background: #fff;
+    color: #18202f;
+    cursor: pointer;
+    font: inherit;
+}
+
+.wh-dialog img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 75vh;
+    object-fit: contain;
+}
+
+.duel-intro p {
+    margin: 28px 0;
+    font-size: clamp(1.125rem, 3vw, 1.5rem);
+}
+
+.duel-ready {
+    font-size: 1.25rem;
+}
+
+.duel-activity {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 48px;
+    margin: 0;
+    text-align: center;
+    font-size: clamp(1rem, 2.6vw, 1.5rem);
+    overflow-wrap: anywhere;
+}
+
+.duel-activity[hidden],
+.activity-picker select[hidden] {
+    display: none;
+}
+
+.activity-picker .duel-activity {
+    flex: 1;
+    min-width: 0;
+}
+
+.duel-navigation {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.duel-arrow {
+    display: grid;
+    width: 48px;
+    height: 48px;
+    place-items: center;
+    border-radius: 8px;
+    background: var(--estime-blue);
+    color: #18202f;
+    text-decoration: none;
+    font-size: 1.5rem;
+}
+
+.duel-arrow[aria-disabled="true"] {
+    background: #e7e9ee;
+    color: #647084;
+}
+
+.duel-columns {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(8px, 3vw, 28px);
+}
+
+.duel-side {
+    display: grid;
+    gap: 12px;
+    padding: clamp(8px, 3vw, 28px);
+    border: 1px solid #d3d9e2;
+    border-radius: 16px;
+    background: #e7e9ee;
+    --bar-color: #2563eb;
+}
+
+.duel-side + .duel-side {
+    --bar-color: #12805c;
+}
+
+.activity-picker {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.activity-icon {
+    flex: none;
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+}
+
+.activity-help summary {
+    display: grid;
+    width: 32px;
+    height: 32px;
+    place-items: center;
+    border: 1px solid #343a46;
+    border-radius: 50%;
+    background: #343a46;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 800;
+}
+
+.activity-help summary:hover,
+.activity-help summary:focus-visible {
+    background: #20242d;
+}
+
+.activity-help summary::-webkit-details-marker {
+    display: none;
+}
+
+.activity-message {
+    position: absolute;
+    z-index: 1;
+    inset-inline-end: 0;
+    box-sizing: border-box;
+    width: min(100%, 300px);
+    padding: 12px;
+    border-radius: 8px;
+    background: #18202f;
+    color: #fff;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.activity-help:hover::details-content,
+.activity-help:focus-within::details-content {
+    content-visibility: visible;
+}
+
+.duel-side select {
+    box-sizing: border-box;
+    flex: 1;
+    min-width: 0;
+    min-height: 48px;
+    padding-inline: 44px 10px;
+    border: 1px solid #8a96a8;
+    border-radius: 8px;
+    background: #fff var(--activity-icon, none) no-repeat left 8px center / 28px 28px;
+    color: inherit;
+    font: inherit;
+    font-weight: 700;
+}
+
+@supports (appearance: base-select) and selector(::picker(select)) {
+    .duel-side select,
+    .duel-side select::picker(select) {
+        appearance: base-select;
+    }
+
+    .duel-side select {
+        align-items: center;
+        padding-inline: 8px;
+    }
+
+    .duel-side selectedcontent,
+    .duel-side option {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 0;
+        overflow-wrap: anywhere;
+        white-space: normal;
+    }
+
+    .duel-side select::picker(select) {
+        max-width: calc(100vw - 24px);
+    }
+}
+
+.duel-chart {
+    position: relative;
+    height: clamp(160px, 36vh, 320px);
+    margin-top: 36px;
+    border-bottom: 1px solid #8a96a8;
+    --bar-height: 0%;
+}
+
+.energy-bar, .energy-value {
+    position: absolute;
+    left: 50%;
+    translate: -50%;
+}
+
+.energy-bar {
+    bottom: 0;
+    width: min(55%, 112px);
+    height: var(--bar-height);
+    border-radius: 8px 8px 0 0;
+    background: var(--bar-color);
+    transform-origin: bottom;
+}
+
+.duel-chart[data-consumption="lower"] {
+    --bar-color: #12805c;
+}
+
+.duel-chart[data-consumption="higher"] {
+    --bar-color: #d01928;
+}
+
+.duel-chart[data-consumption="equal"] {
+    --bar-color: #647084;
+}
+
+.energy-bike {
+    min-height: 1.25em;
+    color: #647084;
+    font-size: 0.875rem;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.energy-bike svg {
+    width: 1.15em;
+    height: 1em;
+    margin-inline-end: 0.3em;
+    vertical-align: -0.12em;
+}
+
+.energy-bike:has(span:empty) svg {
+    visibility: hidden;
+}
+
+.duel-chart[data-consumption="lower"] + .energy-bike {
+    color: #076044;
+}
+
+.duel-chart[data-consumption="higher"] + .energy-bike {
+    color: #ac1523;
+}
+
+.energy-value {
+    bottom: calc(var(--bar-height) + 8px);
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+[data-preset] .duel-chart {
+    --bar-width: min(40%, 112px);
+}
+
+[data-preset] .energy-bar {
+    width: var(--bar-width);
+}
+
+.energy-factor {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-end: 0;
+    display: flex;
+    justify-content: flex-end;
+    width: calc((100% - var(--bar-width)) / 2);
+    transform: translateY(-50%);
+}
+
+.duel-side:nth-child(2) .energy-factor {
+    inset-inline: 0 auto;
+    justify-content: flex-start;
+}
+
+.energy-factor-badge {
+    display: grid;
+    width: clamp(44px, 10vw, 90px);
+    justify-items: center;
+    gap: 0;
+    color: #18202f;
+    font-size: clamp(0.95rem, 2.6vw, 1.5rem);
+    font-weight: 800;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.energy-factor-badge[hidden] {
+    display: none;
+}
+
+.energy-factor-badge::before {
+    width: 100%;
+    aspect-ratio: 1.12;
+    background: url("images/attention.png") center / contain no-repeat;
+    content: "";
+}
+
+.duel-compare {
+    grid-column: 1 / -1;
+    justify-self: center;
+    border: 0;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 1.25rem;
+}

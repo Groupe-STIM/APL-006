@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Le duel énergétique</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="activites.js" defer></script>
+    <script src="duels.js" defer></script>
+    <script src="script.js" defer></script>
+</head>
+<body class="duel-page">
+    <main class="duel">
+        <h1>Le duel énergétique</h1>
+        <form class="duel-columns" id="duel-form" data-preset>
+            <section class="duel-side" aria-label="Côté gauche">
+                <div class="activity-picker">
+                    <h2 class="duel-activity" id="duel-left"><img class="activity-icon" alt=""><span></span></h2>
+                    <select hidden disabled id="activity-left" aria-label="Activité de gauche" required>
+                        <button type="button"><selectedcontent></selectedcontent></button>
+                    </select>
+                    <details class="activity-help" hidden>
+                        <summary aria-label="Détails sur l’activité de gauche">?</summary>
+                        <div class="activity-message"></div>
+                    </details>
+                </div>
+                <div class="duel-chart">
+                    <div class="energy-bar" aria-hidden="true"></div>
+                    <output class="energy-value" aria-label="Énergie du côté gauche"></output>
+                    <div class="energy-factor"><output class="energy-factor-badge" hidden></output></div>
+                </div>
+                <div class="energy-bike">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 18" fill="none" stroke="currentColor" aria-hidden="true" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="5" cy="12.5" r="4"/>
+                        <circle cx="19" cy="12.5" r="4"/>
+                        <path d="m5 12.5 4-7 4 7H5m4-7h7m-3 7 3-7m3 7-4.5-10H18M7.5 3.5h3"/>
+                    </svg>
+                    <span></span>
+                </div>
+            </section>
+            <section class="duel-side" aria-label="Côté droit">
+                <div class="activity-picker">
+                    <h2 class="duel-activity" id="duel-right"><img class="activity-icon" alt=""><span></span></h2>
+                    <select hidden disabled id="activity-right" aria-label="Activité de droite" required>
+                        <button type="button"><selectedcontent></selectedcontent></button>
+                    </select>
+                    <details class="activity-help" hidden>
+                        <summary aria-label="Détails sur l’activité de droite">?</summary>
+                        <div class="activity-message"></div>
+                    </details>
+                </div>
+                <div class="duel-chart">
+                    <div class="energy-bar" aria-hidden="true"></div>
+                    <output class="energy-value" aria-label="Énergie du côté droit"></output>
+                    <div class="energy-factor"><output class="energy-factor-badge" hidden></output></div>
+                </div>
+                <div class="energy-bike">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 18" fill="none" stroke="currentColor" aria-hidden="true" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="5" cy="12.5" r="4"/>
+                        <circle cx="19" cy="12.5" r="4"/>
+                        <path d="m5 12.5 4-7 4 7H5m4-7h7m-3 7 3-7m3 7-4.5-10H18M7.5 3.5h3"/>
+                    </svg>
+                    <span></span>
+                </div>
+            </section>
+            <button class="primary-button duel-compare" type="submit">Comparer</button>
+        </form>
+        <nav class="duel-navigation" aria-label="Navigation entre les duels">
+            <a class="duel-arrow" id="duel-previous" aria-label="Duel précédent">←</a>
+            <a class="duel-arrow" id="duel-next" aria-label="Duel suivant">→</a>
+        </nav>
+    </main>
+</body>
+</html>
