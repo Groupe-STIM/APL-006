@@ -81,8 +81,18 @@ if (duelForm) {
 
     function updateHelp(side, activity) {
         const explanation = activity[2] ?? '';
-        side.message.textContent = explanation;
-        side.help.hidden = !explanation.trim();
+        if (Array.isArray(explanation)) {
+            const content = explanation.map(([text, bold]) => {
+                if (!bold) return document.createTextNode(text);
+                const emphasis = document.createElement('strong');
+                emphasis.textContent = text;
+                return emphasis;
+            });
+            side.message.replaceChildren(...content);
+        } else {
+            side.message.textContent = explanation;
+        }
+        side.help.hidden = !side.message.textContent.trim();
         side.help.open = false;
     }
 
@@ -211,9 +221,13 @@ if (duelForm) {
                 value.textContent = `${quantityFormat.format(quantity)}\u00a0${unit}`;
                 if (bike) {
                     // À 60 W, une minute de vélo correspond à 1 Wh.
-                    const duration = quantity < 1
-                        ? `${Math.round(quantity * 60)}\u00a0s`
-                        : `${integerFactorFormat.format(quantity)}\u00a0min`;
+                    const minutes = Math.round(quantity);
+                    let duration = `${minutes}\u00a0min`;
+                    if (quantity < 1) {
+                        duration = `${Math.round(quantity * 60)}\u00a0s`;
+                    } else if (quantity > 60) {
+                        duration = `${Math.floor(minutes / 60)}\u00a0h ${minutes % 60}\u00a0min`;
+                    }
                     bike.textContent = `≈ ${duration}`;
                 }
             }

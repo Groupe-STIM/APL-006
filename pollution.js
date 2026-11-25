@@ -1,11 +1,11 @@
 // Source : onglets Sources d’énergie et Pollution du classeur activites_ia.xlsx.
 const electricitySources = [
-    ["Solaire", 48.0, "Champ de panneaux solaires photovoltaïque au sol", "SOLAIRE"],
-    ["Hydroélectricité", 24.0, "Barrage hydroélectrique", "HYDRO"],
-    ["Charbon", 820.0, "Centrale au charbon pulvérisé", "CHARBON"],
-    ["Gaz naturel", 490.0, "Gaz naturel à cycle combiné", "GAZ"],
-    ["Eolien", 11.0, "Parc éolien", "EOLIEN"],
-    ["Nucléaire", 12.0, "Centrale nucléaire", "NUCLEAIRE"],
+    ["Solaire", 48, [["Comment produit-on l'électricité?", true], ["\nDes panneaux solaires captent la lumière du Soleil et la transforment directement en électricité.\n\n", false], ["D'où viennent les émissions de GES?", true], ["\nPrincipalement de la fabrication des panneaux, de l'extraction des matériaux et de la construction des installations. Les panneaux ne produisent pratiquement pas de GES lorsqu'ils génèrent de l'électricité.", false]], "SOLAIRE"],
+    ["Hydroélectricité", 24, [["Comment produit-on l'électricité?", true], ["\nL'eau d'un barrage fait tourner de grandes turbines reliées à des générateurs qui produisent de l'électricité.\n\n", false], ["D'où viennent les émissions de GES?", true], ["\nPrincipalement de la construction des barrages et, dans certains réservoirs, de la décomposition de matières organiques sous l'eau, qui peut libérer du CO₂ et du méthane.", false]], "HYDRO"],
+    ["Charbon", 820, [["Comment produit-on l'électricité?", true], ["\nOn brûle du charbon réduit en poudre pour chauffer de l'eau et produire de la vapeur. Cette vapeur fait tourner une turbine reliée à un générateur d'électricité.\n\n", false], ["D'où viennent les émissions de GES?", true], ["\nPrincipalement de la combustion du charbon, qui libère de grandes quantités de CO₂ dans l'atmosphère. L'extraction et le transport du charbon produisent aussi des émissions.", false]], "CHARBON"],
+    ["Gaz naturel", 490, [["Comment produit-on l'électricité?", true], ["\nOn brûle du gaz naturel pour faire tourner une première turbine. La chaleur récupérée sert ensuite à produire de la vapeur qui fait tourner une deuxième turbine, permettant de produire davantage d'électricité.\n\n", false], ["D'où viennent les émissions de GES?", true], ["\nPrincipalement de la combustion du gaz naturel, qui libère du CO₂. Des fuites de méthane, un puissant gaz à effet de serre, peuvent aussi survenir lors de son extraction et de son transport.", false]], "GAZ"],
+    ["Eolien", 11, [["Comment produit-on l'électricité?", true], ["\nLe vent fait tourner les pales des éoliennes, qui entraînent un générateur produisant de l'électricité.\n\n", false], ["D'où viennent les émissions de GES?", true], ["\nPrincipalement de la fabrication des éoliennes, de l'extraction des matériaux et de leur installation. Les éoliennes ne produisent pratiquement pas de GES lorsqu'elles génèrent de l'électricité.", false]], "EOLIEN"],
+    ["Nucléaire", 12, [["Comment produit-on l'électricité?", true], ["\nDans un réacteur nucléaire, on utilise l'énergie libérée par la fission de l'uranium pour produire de la chaleur. Celle-ci sert à produire de la vapeur qui fait tourner une turbine reliée à un générateur d'électricité.\n\n", false], ["D'où viennent les émissions de GES?", true], ["\nPrincipalement de l'extraction et de la préparation de l'uranium, ainsi que de la construction et du démantèlement des centrales. La production d'électricité dans le réacteur ne libère pratiquement pas de GES.", false]], "NUCLEAIRE"],
 ];
 
 const pollutionMatchups = [

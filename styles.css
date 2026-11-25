@@ -70,7 +70,7 @@ body {
 .welcome-challenges {
     display: grid;
     gap: 14px;
-    width: min(100%, 460px);
+    width: min(100%, 540px);
     margin: 36px auto 0;
 }
 
@@ -86,18 +86,18 @@ body {
     background-color: #f0be26;
 }
 
-.welcome-duel-button {
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+.welcome-button-with-icon {
+    grid-template-columns: minmax(36px, 1fr) minmax(0, max-content) minmax(36px, 1fr);
 }
 
-.welcome-duel-button span {
+.welcome-button-with-icon span {
     grid-column: 2;
 }
 
-.welcome-duel-button img {
+.welcome-button-with-icon img {
     justify-self: end;
-    width: min(100%, 56px);
-    height: 40px;
+    width: min(100%, 72px);
+    height: 52px;
     object-fit: contain;
 }
 
@@ -324,6 +324,10 @@ body {
     line-height: 1.4;
     white-space: pre-wrap;
     overflow-wrap: anywhere;
+}
+
+.activity-message strong {
+    font-size: 1.1em;
 }
 
 .activity-help:hover::details-content,
