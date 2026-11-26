@@ -71,7 +71,7 @@ body {
     display: grid;
     gap: 14px;
     width: min(100%, 540px);
-    margin: 36px auto 0;
+    margin: 80px auto 0;
 }
 
 .welcome-challenges .primary-button {
