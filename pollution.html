@@ -13,10 +13,11 @@
         <img src="images/pollution.png" alt="">
         <p>Deux activités qui consomment exactement la même quantité d'électricité peuvent avoir une empreinte carbone (<a href="images/GES.png" data-dialog="ges-dialog" aria-haspopup="dialog"><strong>GES</strong></a>) très différente selon la façon dont cette électricité est produite.</p>
         <a class="primary-button intro-ready" href="pollution-activite.html">Je suis prêt</a>
-        <dialog class="intro-dialog" id="ges-dialog" aria-label="Gaz à effet de serre (GES)">
-            <form method="dialog">
-                <button type="submit" autofocus>Fermer</button>
-            </form>
+        <dialog class="intro-dialog" id="ges-dialog" aria-labelledby="ges-dialog-title">
+            <header class="dialog-header">
+                <h2 id="ges-dialog-title">Gaz à effet de serre (GES)</h2>
+                <form method="dialog"><button type="submit" autofocus>Fermer</button></form>
+            </header>
             <img src="images/GES.png" alt="Illustration sur les gaz à effet de serre" width="1752" height="897">
         </dialog>
     </main>

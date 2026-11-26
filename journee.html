@@ -3,7 +3,70 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Une journée dans ma vie numérique</title>
+    <title>Une journée dans la vie d’Alex</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="activites.js" defer></script>
+    <script src="pollution.js" defer></script>
+    <script src="script.js" defer></script>
+    <script src="journee.js" defer></script>
 </head>
-<body></body>
+<body class="duel-page">
+    <main class="duel alex-day">
+        <header class="alex-intro">
+            <h1>Une journée dans la vie d’Alex</h1>
+            <p>Alex a 14 ans. C'est samedi, il n'a pas d'école et il a prévu rejoindre ses amis pour jouer au soccer. Tout au long de sa journée, il utilise son cellulaire et sa tablette pour se divertir, communiquer, apprendre et créer.</p>
+        </header>
+        <ol class="alex-timeline" id="alex-timeline" aria-label="Le samedi d’Alex"></ol>
+        <template id="alex-event">
+            <li class="alex-event">
+                <header>
+                    <span class="alex-time"></span>
+                    <span class="alex-place"></span>
+                    <h2></h2>
+                </header>
+                <div class="alex-event-details"></div>
+            </li>
+        </template>
+        <div class="alex-actions">
+            <button class="primary-button" type="button" data-dialog="alex-time-dialog" aria-haspopup="dialog">Répartition du temps</button>
+            <button class="primary-button" type="button" data-dialog="alex-energy-dialog" aria-haspopup="dialog">Bilan énergétique</button>
+        </div>
+        <dialog class="intro-dialog alex-dialog" id="alex-time-dialog" aria-labelledby="alex-time-title">
+            <header class="dialog-header">
+                <h2 id="alex-time-title">Répartition du temps</h2>
+                <form method="dialog"><button autofocus>Fermer</button></form>
+            </header>
+            <div class="alex-donut"><span id="alex-total-time"></span></div>
+            <ul class="alex-legend" id="alex-legend"></ul>
+        </dialog>
+        <dialog class="intro-dialog alex-dialog alex-energy-dialog" id="alex-energy-dialog" aria-labelledby="alex-energy-title">
+            <header class="dialog-header">
+                <h2 id="alex-energy-title">Le bilan de la journée</h2>
+                <form method="dialog"><button autofocus>Fermer</button></form>
+            </header>
+            <div class="alex-energy-layout">
+                <div class="alex-energy-totals">
+                    <h3>Énergie</h3>
+                    <p class="alex-chart-total" id="alex-energy"></p>
+                    <p class="alex-chart-note alex-bike-time">
+                        <svg viewBox="0 0 24 18" fill="none" stroke="currentColor" aria-hidden="true" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="5" cy="12.5" r="4"/>
+                            <circle cx="19" cy="12.5" r="4"/>
+                            <path d="m5 12.5 4-7 4 7H5m4-7h7m-3 7 3-7m3 7-4.5-10H18M7.5 3.5h3"/>
+                        </svg>
+                        <span id="alex-bike"></span>
+                    </p>
+                    <h3>Émissions de GES</h3>
+                    <p class="alex-chart-total" id="alex-emissions"></p>
+                    <p class="alex-chart-note" id="alex-hydro"></p>
+                </div>
+                <div class="alex-energy-bar" id="alex-energy-stack" aria-hidden="true"></div>
+                <div class="alex-segment-labels">
+                    <svg class="alex-segment-links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
+                    <ul class="alex-segment-legend" id="alex-segment-legend" aria-label="Énergie par activité"></ul>
+                </div>
+            </div>
+        </dialog>
+    </main>
+</body>
 </html>

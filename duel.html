@@ -13,10 +13,11 @@
         <img src="images/scale.png" alt="Balance à deux plateaux">
         <p>Laquelle de ces activités numériques consomme le plus d’énergie (<a id="wh-link" href="images/Wh.png" data-dialog="wh-dialog" aria-haspopup="dialog"><strong>Wh</strong></a>)&nbsp;?</p>
         <a class="primary-button duel-ready" href="duels.html?duel=1">Je suis prêt</a>
-        <dialog class="intro-dialog" id="wh-dialog" aria-label="Le wattheure (Wh)">
-            <form method="dialog">
-                <button type="submit" autofocus>Fermer</button>
-            </form>
+        <dialog class="intro-dialog" id="wh-dialog" aria-labelledby="wh-dialog-title">
+            <header class="dialog-header">
+                <h2 id="wh-dialog-title">Le wattheure (Wh)</h2>
+                <form method="dialog"><button type="submit" autofocus>Fermer</button></form>
+            </header>
             <img src="images/Wh.png" alt="Illustration explicative du wattheure (Wh)" width="1672" height="941">
         </dialog>
     </main>
