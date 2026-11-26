@@ -1,3 +1,27 @@
+function emissionsFromEnergy(wattHours, factor) {
+    return (wattHours / 1000) * factor;
+}
+
+function activityIconPath(id) {
+    return `images/${id === 'WEB-04a' ? 'WEB-04' : id}.png`;
+}
+
+function supportsIconOptions() {
+    return CSS.supports('appearance', 'base-select') && CSS.supports('selector(::picker(select))');
+}
+
+function addIconOption(select, label, id, richSelect) {
+    const option = new Option(label, id);
+    if (richSelect) {
+        const icon = document.createElement('img');
+        icon.className = 'activity-icon';
+        icon.src = activityIconPath(id);
+        icon.alt = '';
+        option.prepend(icon);
+    }
+    select.add(option);
+}
+
 const duelStoragePrefix = 'apl-006:duel:';
 const readyLink = document.querySelector('.duel-ready');
 
@@ -48,7 +72,7 @@ if (duelForm) {
     const integerFactorFormat = new Intl.NumberFormat('fr-CA', { maximumFractionDigits: 0 });
     const smallEmissionFormat = new Intl.NumberFormat('fr-CA', { maximumSignificantDigits: 1 });
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const richSelect = CSS.supports('appearance', 'base-select') && CSS.supports('selector(::picker(select))');
+    const richSelect = supportsIconOptions();
     let animations = [];
 
     const preset = duelForm.hasAttribute('data-preset');
@@ -100,7 +124,7 @@ if (duelForm) {
         const { select, heading } = side;
         if (id.toLowerCase() !== 'any') {
             const entry = entries.find((activity) => activity[3] === id);
-            heading.querySelector('img').src = `images/${id}.png`;
+            heading.querySelector('img').src = activityIconPath(id);
             heading.querySelector('span').textContent = entry[0];
             updateHelp(side, entry);
             return () => entry;
@@ -110,15 +134,7 @@ if (duelForm) {
         select.hidden = false;
         select.disabled = false;
         for (const [description, , , activityId] of entries) {
-            const option = new Option(description, activityId);
-            if (richSelect) {
-                const icon = document.createElement('img');
-                icon.className = 'activity-icon';
-                icon.src = `images/${activityId}.png`;
-                icon.alt = '';
-                option.prepend(icon);
-            }
-            select.add(option);
+            addIconOption(select, description, activityId, richSelect);
         }
         const savedIndex = entries.findIndex((activity) => activity[3] === savedId);
         select.selectedIndex = savedIndex < 0 ? defaultIndex : savedIndex;
@@ -128,7 +144,7 @@ if (duelForm) {
         function updateSelection() {
             const activity = selection();
             if (!richSelect) {
-                select.style.setProperty('--activity-icon', `url("images/${activity[3]}.png")`);
+                select.style.setProperty('--activity-icon', `url("${activityIconPath(activity[3])}")`);
             }
             updateHelp(side, activity);
         }
@@ -182,7 +198,7 @@ if (duelForm) {
         clearComparison();
 
         const quantities = selectedActivities().map((activity) => pollution
-            ? activity[1] * (pollutionActivity()[1] / 1000)
+            ? emissionsFromEnergy(pollutionActivity()[1], activity[1])
             : activity[1]);
         const minimum = Math.min(...quantities);
         const maximum = Math.max(...quantities) || 1;

@@ -10,6 +10,7 @@ const activities = [
     ["Regarder 1 h de Netflix sur iPad à la maison", 93, "via WiFi", "WEB-02"],
     ["Regarder YouTube pendant 1h à la maison", 37.4, "via Wi-Fi", "WEB-03"],
     ["Faire un appel vidéo (WhatsApp) de 1 h avec mon ami.e à l'extérieur (4G/5G)", 71.4, "via 4G/5G", "WEB-04"],
+    ["Faire un appel vidéo (WhatsApp) de 1 h avec mon ami.e à la maison", 23.1, "via Wi-Fi", "WEB-04a"],
     ["Faire un appel audio (WhatsApp) de 1 h avec mon ami.e à l'extérieur (4G/5G)", 4.1, "via 4G/5G", "WEB-05"],
     ["Regarder TikTok pendant 1h à l'extérieur (4G/5G)", 87.4, "via 4G/5G", "WEB-06"],
     ["Regarder TikTok pendant 1h à la maison", 30.2, "via Wifi", "WEB-06b"],

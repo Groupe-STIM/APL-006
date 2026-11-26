@@ -5,10 +5,137 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Ma journée numérique, mes choix</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="activites.js" defer></script>
+    <script src="pollution.js" defer></script>
+    <script src="script.js" defer></script>
+    <script src="ma-journee.js" defer></script>
 </head>
-<body class="day-return-page">
-    <footer class="day-return">
-        <a class="duel-arrow" href="bilan.html" aria-label="Retour au bilan numérique">←</a>
-    </footer>
+<body class="duel-page">
+    <main class="day-builder" id="day-builder">
+        <header class="day-builder-intro">
+            <h1>Ma journée numérique, mes choix</h1>
+            <p id="day-instruction">Compose ta journée et observe l’impact de tes choix.</p>
+            <strong id="day-mode" hidden>Défi des 50 %</strong>
+        </header>
+
+        <section class="day-builder-section" aria-labelledby="day-energy-title">
+            <div class="day-builder-row">
+                <div><h2 id="day-energy-title">Consommation énergétique</h2><output class="day-figure" id="day-energy"></output></div>
+                <div class="day-builder-bike">
+                    <svg viewBox="0 0 24 18" fill="none" stroke="currentColor" aria-hidden="true" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="5" cy="12.5" r="4"/><circle cx="19" cy="12.5" r="4"/>
+                        <path d="m5 12.5 4-7 4 7H5m4-7h7m-3 7 3-7m3 7-4.5-10H18M7.5 3.5h3"/>
+                    </svg>
+                    <output id="day-bike"></output>
+                    <small>Équivalent à vélo</small>
+                </div>
+            </div>
+            <div class="day-meter" id="day-energy-meter" aria-hidden="true">
+                <div class="day-energy-segments"></div>
+                <span class="day-target-marker" hidden></span><span class="day-target-label" hidden></span>
+            </div>
+            <div class="day-builder-row">
+                <small id="day-budget-status"></small>
+                <select id="day-budget" aria-label="Budget énergétique">
+                    <option value="Infinity">Budget : illimité</option>
+                    <option value="100">Budget : 100 Wh</option>
+                    <option value="200">Budget : 200 Wh</option>
+                    <option value="500">Budget : 500 Wh</option>
+                    <option value="1000">Budget : 1 000 Wh</option>
+                </select>
+                <small id="day-challenge-budget" hidden></small>
+            </div>
+            <div class="day-builder-row day-original" id="day-original" hidden>
+                <small id="day-original-energy"></small><small id="day-energy-change"></small>
+            </div>
+        </section>
+
+        <section class="day-builder-section" aria-labelledby="day-ges-title">
+            <div class="day-builder-row">
+                <div><h2 id="day-ges-title">Émissions de GES</h2><output class="day-figure" id="day-ges"></output></div>
+                <div class="day-source-control">
+                    <label for="day-source">Source d’électricité</label>
+                    <div class="day-source-picker activity-picker">
+                        <select id="day-source">
+                            <button type="button"><selectedcontent></selectedcontent></button>
+                        </select>
+                    </div>
+                    <small id="day-source-lock" hidden>Source verrouillée pendant le défi</small>
+                </div>
+            </div>
+            <div class="day-meter" id="day-ges-meter" aria-hidden="true">
+                <div class="day-meter-fill"></div>
+                <span class="day-target-marker" hidden></span><span class="day-target-label" hidden></span>
+            </div>
+            <div class="day-builder-row"><small>0 g CO₂e</small><small id="day-ges-scale"></small></div>
+        </section>
+
+        <section class="day-builder-section" aria-labelledby="day-time-title">
+            <h2 id="day-time-title">Temps connecté</h2>
+            <output class="day-figure" id="day-time"></output>
+            <div class="day-meter day-time-meter" id="day-time-meter">
+                <div class="day-meter-fill"></div><span class="day-time-percent"></span>
+            </div>
+            <p class="day-error" id="day-time-warning" hidden></p>
+        </section>
+
+        <section class="day-builder-section" aria-labelledby="day-digital-title">
+            <div class="day-builder-row"><h2 id="day-digital-title">Mes activités numériques</h2><small>À la maison, en Wi-Fi</small></div>
+            <div class="day-builder-row day-list-header"><small>Activité</small><small>Durée · Énergie</small></div>
+            <div id="day-digital-list"></div>
+        </section>
+        <section class="day-builder-section" aria-labelledby="day-ai-title">
+            <h2 id="day-ai-title">Mes activités avec l’IA</h2>
+            <div class="day-builder-row day-list-header"><small>Activité</small><small>Quantité · Énergie</small></div>
+            <div id="day-ai-list"></div>
+        </section>
+
+        <section class="day-builder-section day-builder-actions" aria-label="Actions sur la journée">
+            <p id="day-budget-feedback" role="status" hidden></p>
+            <button class="day-secondary" id="day-reset" type="button">Réinitialiser ma journée</button>
+            <button class="primary-button" id="day-offer" type="button" aria-controls="day-confirmation" aria-expanded="false">Relever le défi des 50 %</button>
+            <div class="day-panel" id="day-confirmation" hidden>
+                <h2>Le défi des 50 %</h2>
+                <p>Serais-tu capable de passer une journée tout aussi agréable en consommant deux fois moins d’énergie?</p>
+                <div class="day-confirmation-values">
+                    <div><small>Ta consommation actuelle</small><strong id="day-confirm-energy"></strong><small id="day-confirm-ges"></small></div>
+                    <div><small>Ton nouveau budget</small><strong id="day-confirm-budget"></strong><small id="day-confirm-target-ges"></small></div>
+                </div>
+                <p>Modifie tes activités et leur durée pour atteindre ton nouvel objectif.</p>
+                <button class="primary-button" id="day-accept" type="button">Je relève le défi!</button>
+                <button class="day-secondary" id="day-cancel" type="button">Continuer à composer ma journée</button>
+            </div>
+            <button class="primary-button" id="day-finish" type="button" hidden>Terminer le défi</button>
+            <button class="day-secondary" id="day-free" type="button" hidden>Revenir au mode libre</button>
+        </section>
+
+        <section class="day-builder-section" id="day-summary" aria-labelledby="day-summary-title" hidden>
+            <h2 id="day-summary-title" tabindex="-1">Mon bilan numérique</h2>
+            <p class="day-summary-key">Gris clair : Avant · Gris foncé : Après</p>
+            <div id="day-comparisons"></div>
+            <p class="day-success day-summary-result">Défi réussi!</p>
+        </section>
+        <footer class="day-return">
+            <a class="duel-arrow" href="bilan.html" aria-label="Retour au bilan numérique">←</a>
+        </footer>
+
+        <template id="day-activity-template">
+            <div class="day-activity">
+                <span class="day-activity-stripe" aria-hidden="true"></span>
+                <div class="day-activity-name"><img alt="" width="28" height="28"><div><strong></strong><small hidden></small></div></div>
+                <button class="day-step" type="button">−</button>
+                <output class="day-activity-quantity"></output>
+                <button class="day-step" type="button">+</button>
+                <output class="day-activity-energy"></output>
+            </div>
+        </template>
+        <template id="day-comparison-template">
+            <div class="day-comparison">
+                <div class="day-builder-row"><h3></h3><strong class="day-variation"></strong></div>
+                <div class="day-comparison-line day-comparison-before"><span>Avant</span><div class="day-meter" aria-hidden="true"><div class="day-meter-fill"></div></div><output></output></div>
+                <div class="day-comparison-line"><span>Après</span><div class="day-meter" aria-hidden="true"><div class="day-meter-fill"></div></div><output></output></div>
+            </div>
+        </template>
+    </main>
 </body>
 </html>

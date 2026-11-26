@@ -102,10 +102,9 @@ donut.style.setProperty('--digital-end', `${timeCategories.digital.minutes / tot
 donut.style.setProperty('--ai-end', `${(timeCategories.digital.minutes + timeCategories.ai.minutes) / totalMinutes * 100}%`);
 
 const wholeNumber = new Intl.NumberFormat('fr-CA', { maximumFractionDigits: 0 });
-const kilowattHours = totalEnergy / 1000;
 document.querySelector('#alex-energy').textContent = `${wholeNumber.format(totalEnergy)}\u00a0Wh`;
 document.querySelector('#alex-bike').textContent = `≈ ${formatAlexDuration(totalEnergy)} de pédalage`;
-document.querySelector('#alex-emissions').textContent = `${wholeNumber.format(kilowattHours * hydroFactor)}\u00a0g CO₂e`;
+document.querySelector('#alex-emissions').textContent = `${wholeNumber.format(emissionsFromEnergy(totalEnergy, hydroFactor))}\u00a0g CO₂e`;
 document.querySelector('#alex-hydro').textContent = `Source : ${hydroName}`;
 
 const segmentColors = ['#06778a', '#ad235a', '#473588', '#966211', '#21664a',
