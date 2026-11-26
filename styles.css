@@ -70,7 +70,7 @@ body {
 .welcome-challenges {
     display: grid;
     gap: 14px;
-    width: min(100%, 540px);
+    width: min(100%, 580px);
     margin: 80px auto 0;
 }
 
@@ -87,14 +87,18 @@ body {
 }
 
 .welcome-button-with-icon {
-    grid-template-columns: minmax(36px, 1fr) minmax(0, max-content) minmax(36px, 1fr);
+    --welcome-icon-column: clamp(36px, 13vw, 72px);
+    grid-template-columns: var(--welcome-icon-column) minmax(0, 1fr) var(--welcome-icon-column);
+    column-gap: clamp(4px, 1.5vw, 12px);
 }
 
 .welcome-button-with-icon span {
     grid-column: 2;
+    overflow-wrap: anywhere;
 }
 
 .welcome-button-with-icon img {
+    grid-column: 3;
     justify-self: end;
     width: min(100%, 72px);
     height: 52px;
@@ -130,6 +134,33 @@ body {
     max-height: 42vh;
     object-fit: contain;
     margin-inline: auto;
+}
+
+.day-intro-actions {
+    display: grid;
+    gap: 14px;
+    width: min(100%, 420px);
+    margin: 28px auto 0;
+}
+
+.day-intro-actions .primary-button {
+    box-sizing: border-box;
+    max-width: 100%;
+    padding-block: 8px;
+}
+
+.day-return {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 24px;
+}
+
+.day-return-page {
+    box-sizing: border-box;
+    display: grid;
+    align-content: end;
+    min-height: 100vh;
+    padding: 24px;
 }
 
 .intro-dialog {
