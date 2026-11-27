@@ -159,14 +159,6 @@ body {
     padding: 0 16px 16px;
 }
 
-.day-return-page {
-    box-sizing: border-box;
-    display: grid;
-    align-content: end;
-    min-height: 100vh;
-    padding: 24px;
-}
-
 .intro-dialog {
     box-sizing: border-box;
     width: min(900px, calc(100% - 32px));
@@ -1042,6 +1034,11 @@ body {
 
 .day-activity-quantity {
     text-align: center;
+}
+
+.day-activity-duration,
+.day-activity-quantity {
+    white-space: normal;
 }
 
 .day-activity-duration,

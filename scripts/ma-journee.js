@@ -20,7 +20,6 @@
     const percent = new Intl.NumberFormat('fr-CA', { style: 'percent', maximumFractionDigits: 0 });
     const energyLabel = (energy) => `${number.format(energy)}\u00a0Wh`;
     const emissionsLabel = (emissions, format = number) => `${format.format(emissions)}\u00a0g CO₂e`;
-    const durationLabel = (minutes) => `${Math.floor(minutes / 60)}\u00a0h ${String(minutes % 60).padStart(2, '0')}\u00a0min`;
     const energyById = new Map(activities.map(([, energy, , id]) => [id, energy]));
     const factorById = new Map(electricitySources.map(([, factor, , id]) => [id, factor]));
 
@@ -46,7 +45,9 @@
         const unitTime = node.querySelector('.day-activity-name small');
         const duration = node.querySelector('.day-activity-duration');
         node.classList.toggle('day-activity-ai', ai);
+        unitTime.hidden = !ai;
         duration.hidden = !ai;
+        if (ai) unitTime.textContent = `${formatDayDuration(definition.minutes)}/fois`;
         const color = dayActivityColor(definition.id);
         node.style.setProperty('--activity-color', color);
         node.querySelector('img').src = activityIconPath(definition.id);
@@ -61,7 +62,7 @@
         addEnergySegmentTooltip(segment, energySegments, energyTooltip, definition.label);
 
         const row = {
-            ...definition, ai, minus, plus, unitTime, duration, segment,
+            ...definition, ai, minus, plus, duration, segment,
             energyPerUnit: energyById.get(definition.id) / (ai ? 1 : 60),
             quantity: node.querySelector('.day-activity-quantity'),
             energy: node.querySelector('.day-activity-energy'),
@@ -79,7 +80,7 @@
     const comparisons = [
         { key: 'energy', label: 'Consommation énergétique', format: energyLabel },
         { key: 'emissions', label: 'Émissions de GES', format: emissionsLabel },
-        { key: 'minutes', label: 'Temps connecté', format: (value) => `${value}\u00a0min` },
+        { key: 'minutes', label: 'Temps connecté', format: formatDayDuration },
     ].map((metric) => {
         const node = element('day-comparison-template').content.firstElementChild.cloneNode(true);
         node.querySelector('h3').textContent = metric.label;
@@ -168,27 +169,25 @@
         show('day-mode', inChallenge);
         text('day-energy', energyLabel(energy));
         element('day-energy').classList.toggle('day-error', overBudget);
-        text('day-bike', `${Math.round(energy)}\u00a0min`);
+        text('day-bike', formatDayDuration(energy));
         text('day-ges', emissionsLabel(emissions));
         text('day-ges-scale', emissionsLabel(emissionsFromEnergy(unlimited ? energy : scale, factor)));
-        text('day-time', durationLabel(minutes));
+        text('day-time', formatDayDuration(minutes));
         element('day-time').classList.toggle('day-error', overTime);
-        text('day-time-warning', `Tu dépasses la durée disponible de ${minutes - dayMinutes} minutes.`);
+        text('day-time-warning', `Tu dépasses la durée disponible de ${formatDayDuration(minutes - dayMinutes)}.`);
         show('day-time-warning', overTime);
         updateTimeMeter(minutes);
 
         rows.forEach((row, index) => {
             const quantity = quantities[index];
-            row.quantity.textContent = `${quantity}\u00a0${row.ai ? 'fois' : 'min'}`;
+            row.quantity.textContent = row.ai ? `${quantity}\u00a0fois` : formatDayDuration(quantity);
             row.energy.textContent = energyLabel(day.contributions[index]);
             row.segment.style.width = `${day.contributions[index] / scale * 100}%`;
             row.segment.hidden = day.contributions[index] === 0;
             row.minus.disabled = quantity === 0;
             row.plus.disabled = quantity >= row.max;
-            row.unitTime.hidden = !row.ai;
             if (row.ai) {
-                row.unitTime.textContent = `${row.minutes} min/fois`;
-                row.duration.textContent = `${row.minutes * quantity}\u00a0min`;
+                row.duration.textContent = formatDayDuration(row.minutes * quantity);
             }
         });
         gesMeter.querySelector('.day-meter-fill').style.width = `${energy / scale * 100}%`;

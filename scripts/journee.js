@@ -17,14 +17,14 @@ const alexDay = [
     {"time": "21 h à 21 h 30 h", "place": "À la maison", "title": "La fin de la journée", "items": [{"description": "Alex se prépare pour la nuit, lit un peu et se couche.", "label": "Aucune activité numérique.", "id": "NONE", "units": 0.0, "minutes": 30}]},
 ];
 
-let totalMinutes = 0;
-let connectedMinutes = 0;
 const activityEnergy = new Map(activities.map(([, energy, , id]) => [id, energy]));
 const [hydroName, hydroFactor] = electricitySources.find((source) => source[3] === 'HYDRO');
 const timeline = document.querySelector('#alex-timeline');
 const eventTemplate = document.querySelector('#alex-event');
+const activityTotals = new Map();
+let totalMinutes = 0;
+let connectedMinutes = 0;
 let totalEnergy = 0;
-const energyByActivity = new Map();
 
 for (const { time, place, title, items } of alexDay) {
     const event = eventTemplate.content.cloneNode(true);
@@ -40,14 +40,14 @@ for (const { time, place, title, items } of alexDay) {
             connectedMinutes += minutes;
             const energy = activityEnergy.get(id) * units;
             totalEnergy += energy;
-            const entry = energyByActivity.get(id) ?? {
+            const entry = activityTotals.get(id) ?? {
                 name: category === 'ai' ? label.split(' — ')[1] : label.split(' — ')[0],
                 energy: 0,
                 minutes: 0,
             };
             entry.energy += energy;
             entry.minutes += minutes;
-            energyByActivity.set(id, entry);
+            activityTotals.set(id, entry);
         }
 
         const paragraph = document.createElement('p');
@@ -62,17 +62,9 @@ for (const { time, place, title, items } of alexDay) {
     timeline.append(event);
 }
 
-function formatAlexDuration(minutes) {
-    const wholeMinutes = Math.round(minutes);
-    const hours = Math.floor(wholeMinutes / 60);
-    const remainder = wholeMinutes % 60;
-    if (hours === 0) return `${remainder}\u00a0min`;
-    return remainder ? `${hours}\u00a0h\u00a0${String(remainder).padStart(2, '0')}` : `${hours}\u00a0h`;
-}
-
 const wholeNumber = new Intl.NumberFormat('fr-CA', { maximumFractionDigits: 0 });
 document.querySelector('#alex-energy').textContent = `${wholeNumber.format(totalEnergy)}\u00a0Wh`;
-document.querySelector('#alex-bike').textContent = `≈ ${formatAlexDuration(totalEnergy)}`;
+document.querySelector('#alex-bike').textContent = `≈ ${formatDayDuration(totalEnergy)}`;
 document.querySelector('#alex-emissions').textContent = `${wholeNumber.format(emissionsFromEnergy(totalEnergy, hydroFactor))}\u00a0g CO₂e`;
 document.querySelector('#alex-hydro').textContent = `Source : ${hydroName}`;
 
@@ -83,7 +75,7 @@ const activityList = document.querySelector('#alex-activity-list');
 const aiList = document.querySelector('#alex-ai-list');
 const activityRow = document.querySelector('#alex-activity-row');
 const activityNumber = new Intl.NumberFormat('fr-CA', { maximumFractionDigits: 1 });
-for (const [id, { name, energy, minutes }] of energyByActivity) {
+for (const [id, { name, energy, minutes }] of activityTotals) {
     const color = dayActivityColor(id);
     const block = document.createElement('span');
     block.style.width = `${totalEnergy ? energy / totalEnergy * 100 : 0}%`;
@@ -100,7 +92,7 @@ for (const [id, { name, energy, minutes }] of energyByActivity) {
     row.style.setProperty('--activity-color', color);
     row.querySelector('img').src = activityIconPath(id);
     row.querySelector('strong').textContent = name;
-    row.querySelector('.day-activity-duration').textContent = `${minutes}\u00a0min`;
+    row.querySelector('.day-activity-duration').textContent = formatDayDuration(minutes);
     row.querySelector('.day-activity-energy').textContent = `${activityNumber.format(energy)}\u00a0Wh`;
     const list = id.startsWith('IA-') ? aiList : activityList;
     list.append(row);
@@ -109,7 +101,7 @@ for (const [id, { name, energy, minutes }] of energyByActivity) {
 document.querySelector('#alex-ges-fill').style.width = totalEnergy > 0 ? '100%' : '0%';
 const percent = new Intl.NumberFormat('fr-CA', { style: 'percent', maximumFractionDigits: 0 });
 const connectedShare = totalMinutes ? connectedMinutes / totalMinutes : 0;
-document.querySelector('#alex-connected-time').textContent = formatAlexDuration(connectedMinutes);
+document.querySelector('#alex-connected-time').textContent = formatDayDuration(connectedMinutes);
 const connectedFill = document.querySelector('#alex-connected-fill');
 connectedFill.style.width = `${connectedShare * 100}%`;
 connectedFill.textContent = percent.format(connectedShare);

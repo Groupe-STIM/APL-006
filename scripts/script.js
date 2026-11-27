@@ -2,6 +2,15 @@ function emissionsFromEnergy(wattHours, factor) {
     return (wattHours / 1000) * factor;
 }
 
+function formatDayDuration(minutes) {
+    const rounded = Math.round(minutes);
+    if (rounded <= 60) return `${rounded}\u00a0min`;
+
+    const hours = Math.floor(rounded / 60);
+    const remainder = rounded % 60;
+    return remainder ? `${hours}\u00a0h ${remainder}\u00a0min` : `${hours}\u00a0h`;
+}
+
 function addEnergySegmentTooltip(segment, bar, tooltip, label) {
     segment.tabIndex = 0;
     segment.setAttribute('aria-label', label);
