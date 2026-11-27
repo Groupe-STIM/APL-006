@@ -1,15 +1,15 @@
 (() => {
     const dayMinutes = 780;
     const definitions = [
-        { id: 'WEB-03', label: 'YouTube', step: 15, max: 240, color: '#347eaa' },
-        { id: 'WEB-07', label: 'Roblox', step: 15, max: 240, color: '#7656a8' },
-        { id: 'WEB-06b', label: 'TikTok', step: 15, max: 240, color: '#bd781b' },
-        { id: 'WEB-04a', label: 'WhatsApp — appel vidéo', step: 15, max: 180, color: '#12816e' },
-        { id: 'WEB-02', label: 'Netflix', step: 30, max: 240, color: '#b44a62' },
-        { id: 'IA-01', label: 'Poser des questions simples à l’IA', step: 1, max: 60, minutes: 1, color: '#6a781e' },
-        { id: 'IA-02', label: 'Générer des textes d’une page', step: 1, max: 15, minutes: 10, color: '#9c6336' },
-        { id: 'IA-03', label: 'Générer des images', step: 1, max: 15, minutes: 10, color: '#a14987' },
-        { id: 'IA-04', label: 'Générer des vidéos de 3 secondes', step: 1, max: 10, minutes: 20, color: '#b84330' },
+        { id: 'WEB-03', label: 'YouTube', step: 15, max: 240 },
+        { id: 'WEB-07', label: 'Roblox', step: 15, max: 240 },
+        { id: 'WEB-06b', label: 'TikTok', step: 15, max: 240 },
+        { id: 'WEB-04a', label: 'WhatsApp — appel vidéo', step: 15, max: 180 },
+        { id: 'WEB-02', label: 'Netflix', step: 30, max: 240 },
+        { id: 'IA-01', label: 'Poser des questions simples à l’IA', step: 1, max: 60, minutes: 1 },
+        { id: 'IA-02', label: 'Générer des textes d’une page', step: 1, max: 15, minutes: 10 },
+        { id: 'IA-03', label: 'Générer des images', step: 1, max: 15, minutes: 10 },
+        { id: 'IA-04', label: 'Générer des vidéos de 3 secondes', step: 1, max: 10, minutes: 20 },
     ];
 
     const element = (id) => document.getElementById(id);
@@ -37,13 +37,18 @@
     const gesMeter = element('day-ges-meter');
     const timeMeter = element('day-time-meter');
     const energySegments = energyMeter.querySelector('.day-energy-segments');
+    const energyTooltip = energyMeter.querySelector('.energy-segment-tooltip');
     const activityTemplate = element('day-activity-template');
     const rows = definitions.map((definition, index) => {
         const ai = definition.minutes !== undefined;
         const node = activityTemplate.content.firstElementChild.cloneNode(true);
         const [minus, plus] = node.querySelectorAll('button');
         const unitTime = node.querySelector('.day-activity-name small');
-        node.style.setProperty('--activity-color', definition.color);
+        const duration = node.querySelector('.day-activity-duration');
+        node.classList.toggle('day-activity-ai', ai);
+        duration.hidden = !ai;
+        const color = dayActivityColor(definition.id);
+        node.style.setProperty('--activity-color', color);
         node.querySelector('img').src = activityIconPath(definition.id);
         node.querySelector('strong').textContent = definition.label;
         minus.setAttribute('aria-label', `Diminuer : ${definition.label}`);
@@ -51,11 +56,12 @@
         element(ai ? 'day-ai-list' : 'day-digital-list').append(node);
 
         const segment = document.createElement('span');
-        segment.style.backgroundColor = definition.color;
+        segment.style.backgroundColor = color;
         energySegments.append(segment);
+        addEnergySegmentTooltip(segment, energySegments, energyTooltip, definition.label);
 
         const row = {
-            ...definition, ai, minus, plus, unitTime, segment,
+            ...definition, ai, minus, plus, unitTime, duration, segment,
             energyPerUnit: energyById.get(definition.id) / (ai ? 1 : 60),
             quantity: node.querySelector('.day-activity-quantity'),
             energy: node.querySelector('.day-activity-energy'),
@@ -173,13 +179,17 @@
 
         rows.forEach((row, index) => {
             const quantity = quantities[index];
-            row.quantity.textContent = row.ai ? quantity : `${quantity}\u00a0min`;
+            row.quantity.textContent = `${quantity}\u00a0${row.ai ? 'fois' : 'min'}`;
             row.energy.textContent = energyLabel(day.contributions[index]);
             row.segment.style.width = `${day.contributions[index] / scale * 100}%`;
+            row.segment.hidden = day.contributions[index] === 0;
             row.minus.disabled = quantity === 0;
             row.plus.disabled = quantity >= row.max;
             row.unitTime.hidden = !row.ai;
-            if (row.ai) row.unitTime.textContent = `${row.minutes} min/unité · Total : ${row.minutes * quantity} min`;
+            if (row.ai) {
+                row.unitTime.textContent = `${row.minutes} min/fois`;
+                row.duration.textContent = `${row.minutes * quantity}\u00a0min`;
+            }
         });
         gesMeter.querySelector('.day-meter-fill').style.width = `${energy / scale * 100}%`;
 

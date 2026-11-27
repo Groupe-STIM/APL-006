@@ -16,3 +16,20 @@ const activities = [
     ["Regarder TikTok pendant 1h à la maison", 30.2, "via Wifi", "WEB-06b"],
     ["Jouer à Roblox pendant 1 h sur iPad à la maison", 9.5, "via Wi-Fi (par joueur)", "WEB-07"],
 ];
+
+const dayActivityColors = {
+    'WEB-03': '#468BB8',
+    'WEB-07': '#8473BD',
+    'WEB-06': '#D59A42',
+    'WEB-04': '#78B3A7',
+    'WEB-02': '#C46D70',
+    'IA-01': '#A6AD56',
+    'IA-02': '#C3A16D',
+    'IA-03': '#B47DAA',
+    'IA-04': '#C95743',
+};
+
+function dayActivityColor(id) {
+    const baseId = { 'WEB-04a': 'WEB-04', 'WEB-06b': 'WEB-06' }[id] ?? id;
+    return dayActivityColors[baseId] ?? '#647084';
+}

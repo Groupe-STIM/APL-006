@@ -17,11 +17,8 @@ const alexDay = [
     {"time": "21 h à 21 h 30 h", "place": "À la maison", "title": "La fin de la journée", "items": [{"description": "Alex se prépare pour la nuit, lit un peu et se couche.", "label": "Aucune activité numérique.", "id": "NONE", "units": 0.0, "minutes": 30}]},
 ];
 
-const timeCategories = {
-    digital: { label: 'Activités numériques hors IA', minutes: 0 },
-    ai: { label: 'Utilisation de l’IA', minutes: 0 },
-    offline: { label: 'Activités déconnectées', minutes: 0 },
-};
+let totalMinutes = 0;
+let connectedMinutes = 0;
 const activityEnergy = new Map(activities.map(([, energy, , id]) => [id, energy]));
 const [hydroName, hydroFactor] = electricitySources.find((source) => source[3] === 'HYDRO');
 const timeline = document.querySelector('#alex-timeline');
@@ -38,15 +35,18 @@ for (const { time, place, title, items } of alexDay) {
 
     for (const { description, label, id, units, minutes } of items) {
         const category = id === 'NONE' ? 'offline' : id.startsWith('IA-') ? 'ai' : 'digital';
-        timeCategories[category].minutes += minutes;
+        totalMinutes += minutes;
         if (category !== 'offline') {
+            connectedMinutes += minutes;
             const energy = activityEnergy.get(id) * units;
             totalEnergy += energy;
             const entry = energyByActivity.get(id) ?? {
                 name: category === 'ai' ? label.split(' — ')[1] : label.split(' — ')[0],
                 energy: 0,
+                minutes: 0,
             };
             entry.energy += energy;
+            entry.minutes += minutes;
             energyByActivity.set(id, entry);
         }
 
@@ -70,84 +70,46 @@ function formatAlexDuration(minutes) {
     return remainder ? `${hours}\u00a0h\u00a0${String(remainder).padStart(2, '0')}` : `${hours}\u00a0h`;
 }
 
-const totalMinutes = Object.values(timeCategories).reduce((sum, { minutes }) => sum + minutes, 0);
-document.querySelector('#alex-total-time').textContent = formatAlexDuration(totalMinutes);
-const legend = document.querySelector('#alex-legend');
-const donut = document.querySelector('.alex-donut');
-const percent = new Intl.NumberFormat('fr-CA', { style: 'percent', maximumFractionDigits: 0 });
-let start = 0;
-for (const [category, { label, minutes }] of Object.entries(timeCategories)) {
-    const row = document.createElement('li');
-    const name = document.createElement('span');
-    const value = document.createElement('strong');
-    row.dataset.category = category;
-    name.textContent = label;
-    value.textContent = formatAlexDuration(minutes);
-    row.append(name, value);
-    legend.append(row);
-    if (minutes > 0) {
-        const angle = (start + minutes / 2) / totalMinutes * Math.PI * 2;
-        const share = document.createElement('strong');
-        share.className = 'alex-donut-share';
-        share.setAttribute('aria-label', `${label} : ${percent.format(minutes / totalMinutes)}`);
-        share.textContent = percent.format(minutes / totalMinutes);
-        share.style.left = `${50 + Math.sin(angle) * 38}%`;
-        share.style.top = `${50 - Math.cos(angle) * 38}%`;
-        donut.append(share);
-    }
-    start += minutes;
-}
-
-donut.style.setProperty('--digital-end', `${timeCategories.digital.minutes / totalMinutes * 100}%`);
-donut.style.setProperty('--ai-end', `${(timeCategories.digital.minutes + timeCategories.ai.minutes) / totalMinutes * 100}%`);
-
 const wholeNumber = new Intl.NumberFormat('fr-CA', { maximumFractionDigits: 0 });
 document.querySelector('#alex-energy').textContent = `${wholeNumber.format(totalEnergy)}\u00a0Wh`;
-document.querySelector('#alex-bike').textContent = `≈ ${formatAlexDuration(totalEnergy)} de pédalage`;
+document.querySelector('#alex-bike').textContent = `≈ ${formatAlexDuration(totalEnergy)}`;
 document.querySelector('#alex-emissions').textContent = `${wholeNumber.format(emissionsFromEnergy(totalEnergy, hydroFactor))}\u00a0g CO₂e`;
 document.querySelector('#alex-hydro').textContent = `Source : ${hydroName}`;
 
-const segmentColors = ['#06778a', '#ad235a', '#473588', '#966211', '#21664a',
-    '#33558d', '#9a3424', '#7d3c7a', '#376277'];
 const bar = document.querySelector('#alex-energy-stack');
+const energyTooltip = document.querySelector('#alex-energy-tooltip');
 const segmentLegend = document.querySelector('#alex-segment-legend');
-const segmentLinks = document.querySelector('.alex-segment-links');
-const segmentLabels = [];
-let bottom = 0;
-
-for (const [index, { name, energy }] of [...energyByActivity.values()].entries()) {
-    const color = segmentColors[index % segmentColors.length];
+const activityList = document.querySelector('#alex-activity-list');
+const aiList = document.querySelector('#alex-ai-list');
+const activityRow = document.querySelector('#alex-activity-row');
+const activityNumber = new Intl.NumberFormat('fr-CA', { maximumFractionDigits: 1 });
+for (const [id, { name, energy, minutes }] of energyByActivity) {
+    const color = dayActivityColor(id);
     const block = document.createElement('span');
-    const share = energy / totalEnergy * 100;
-    block.style.flex = `0 0 ${share}%`;
+    block.style.width = `${totalEnergy ? energy / totalEnergy * 100 : 0}%`;
     block.style.backgroundColor = color;
     bar.append(block);
+    addEnergySegmentTooltip(block, bar, energyTooltip, name);
 
     const label = document.createElement('li');
     label.style.setProperty('--segment-color', color);
     label.textContent = name;
     segmentLegend.append(label);
-    segmentLabels.push({ label, color, center: bottom + share / 2 });
-    bottom += share;
+
+    const row = activityRow.content.firstElementChild.cloneNode(true);
+    row.style.setProperty('--activity-color', color);
+    row.querySelector('img').src = activityIconPath(id);
+    row.querySelector('strong').textContent = name;
+    row.querySelector('.day-activity-duration').textContent = `${minutes}\u00a0min`;
+    row.querySelector('.day-activity-energy').textContent = `${activityNumber.format(energy)}\u00a0Wh`;
+    const list = id.startsWith('IA-') ? aiList : activityList;
+    list.append(row);
 }
 
-// Space the names of small neighboring segments without changing their heights.
-let nextLabel = 4;
-for (const segment of segmentLabels) {
-    segment.position = Math.max(segment.center, nextLabel);
-    nextLabel = segment.position + 9;
-}
-nextLabel = 96;
-for (const segment of segmentLabels.reverse()) {
-    segment.position = Math.min(segment.position, nextLabel);
-    segment.label.style.bottom = `${segment.position}%`;
-    nextLabel = segment.position - 9;
-
-    const connector = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
-    const segmentY = 100 - segment.center;
-    const labelY = 100 - segment.position;
-    connector.setAttribute('points', `0,${segmentY} 20,${segmentY} 80,${labelY} 100,${labelY}`);
-    connector.setAttribute('stroke', segment.color);
-    connector.setAttribute('vector-effect', 'non-scaling-stroke');
-    segmentLinks.append(connector);
-}
+document.querySelector('#alex-ges-fill').style.width = totalEnergy > 0 ? '100%' : '0%';
+const percent = new Intl.NumberFormat('fr-CA', { style: 'percent', maximumFractionDigits: 0 });
+const connectedShare = totalMinutes ? connectedMinutes / totalMinutes : 0;
+document.querySelector('#alex-connected-time').textContent = formatAlexDuration(connectedMinutes);
+const connectedFill = document.querySelector('#alex-connected-fill');
+connectedFill.style.width = `${connectedShare * 100}%`;
+connectedFill.textContent = percent.format(connectedShare);

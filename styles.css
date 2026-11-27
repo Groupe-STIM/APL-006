@@ -155,6 +155,10 @@ body {
     margin-top: 24px;
 }
 
+.day-builder-return {
+    padding: 0 16px 16px;
+}
+
 .day-return-page {
     box-sizing: border-box;
     display: grid;
@@ -206,7 +210,7 @@ body {
     font: inherit;
 }
 
-.intro-dialog img {
+.intro-dialog > img {
     display: block;
     width: 100%;
     height: auto;
@@ -625,8 +629,7 @@ body {
     line-height: 1.55;
 }
 
-.alex-tag,
-.alex-legend li {
+.alex-tag {
     --category-color: var(--alex-digital);
 }
 
@@ -677,161 +680,65 @@ body {
     font-size: clamp(1.65rem, 5vw, 2.5rem);
 }
 
-.alex-donut {
-    position: relative;
-    display: grid;
-    width: min(100%, 340px);
-    aspect-ratio: 1;
-    margin: 28px auto 20px;
-    place-items: center;
-    border-radius: 50%;
-    background:
-        radial-gradient(circle closest-side, #fff 51.7%, transparent 52%),
-        conic-gradient(
-            var(--alex-digital) 0 var(--digital-end),
-            var(--alex-ai) var(--digital-end) var(--ai-end),
-            var(--alex-offline) var(--ai-end) 100%
-        );
+.alex-energy-dialog .day-figure {
+    margin-block: 4px 0;
 }
 
-#alex-total-time {
-    font-size: clamp(1.5rem, 6vw, 2.5rem);
-    font-weight: 800;
-}
-
-.alex-donut-share {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    color: #fff;
-    font-size: clamp(0.8rem, 3.5vw, 1.05rem);
-    font-weight: 800;
-    text-shadow: 0 1px 4px #18202f;
-    white-space: nowrap;
-}
-
-.alex-legend {
-    margin: 0;
-    padding: 0;
-}
-
-.alex-legend li {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 4px 10px;
-    padding: 10px 0;
-    border-bottom: 1px solid #d3d9e2;
-}
-
-.alex-legend li::before {
-    align-self: center;
-    width: 11px;
-    height: 11px;
-    border-radius: 50%;
-    background: var(--category-color);
-    content: "";
-}
-
-.alex-legend strong {
-    margin: 0 0 0 auto;
-    font-weight: 800;
-}
-
-.alex-energy-layout {
-    --alex-column-gap: clamp(12px, 3vw, 24px);
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) clamp(30px, 12vw, 90px) minmax(0, 1fr);
-    align-items: stretch;
-    gap: var(--alex-column-gap);
-}
-
-.alex-energy-totals {
-    align-self: center;
-    padding-inline-end: clamp(8px, 4vw, 36px);
-    text-align: right;
-}
-
-.alex-energy-totals h3 {
-    font-size: clamp(0.85rem, 2.5vw, 1.1rem);
-}
-
-.alex-energy-totals h3:not(:first-child) {
-    margin-top: 22px;
-}
-
-.alex-energy-totals h3,
-.alex-chart-total,
-.alex-chart-note {
-    margin: 0 0 6px;
-}
-
-.alex-chart-total {
-    font-size: clamp(1.05rem, 3.8vw, 2rem);
-    font-weight: 800;
-}
-
-.alex-chart-note {
+.alex-energy-dialog small {
     color: #46546b;
-    font-size: 0.9rem;
 }
 
-.alex-bike-time svg {
-    width: 1.2em;
-    height: 1em;
-    vertical-align: -0.12em;
-}
-
-.alex-energy-bar {
-    display: flex;
-    flex-direction: column-reverse;
-    height: 480px;
-    overflow: hidden;
-    border-radius: 8px;
-}
-
-.alex-segment-labels {
-    position: relative;
-}
-
-.alex-segment-links {
+.energy-segment-tooltip {
     position: absolute;
-    top: 0;
-    right: 100%;
-    width: var(--alex-column-gap);
-    height: 100%;
-    overflow: visible;
-    fill: none;
-    stroke-width: 1.5;
+    z-index: 2;
+    bottom: calc(100% + 5px);
+    max-width: 100%;
+    padding: 5px 9px;
+    border-radius: 6px;
+    background: #18202f;
+    color: #fff;
+    font-size: 0.85rem;
+    translate: -50% 0;
     pointer-events: none;
 }
 
+.day-energy-segments span:focus-visible {
+    outline: 2px solid #18202f;
+    outline-offset: -2px;
+}
+
 .alex-segment-legend {
-    position: relative;
-    height: 100%;
-    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    margin: 10px 0 0;
     padding: 0;
     list-style: none;
 }
 
 .alex-segment-legend li {
-    position: absolute;
-    inset-inline: 0;
     display: flex;
-    align-items: baseline;
+    align-items: center;
     gap: 6px;
-    translate: 0 50%;
-    font-size: clamp(0.7rem, 2.4vw, 0.9rem);
-    line-height: 1.15;
+    font-size: 0.85rem;
 }
 
 .alex-segment-legend li::before {
-    align-self: center;
     flex: none;
     width: 9px;
     height: 9px;
     border-radius: 2px;
     background: var(--segment-color);
     content: "";
+}
+
+.alex-connected-fill {
+    display: grid;
+    place-items: center;
+    color: #fff;
+    font-size: 0.84rem;
+    font-weight: 800;
+    white-space: nowrap;
 }
 
 .day-builder {
@@ -998,6 +905,7 @@ body {
     width: 3px;
     background: #fff;
     box-shadow: 0 0 0 1px #555;
+    pointer-events: none;
 }
 
 .day-target-label {
@@ -1034,8 +942,7 @@ body {
     margin: 8px 0 0;
 }
 
-.day-original,
-.day-list-header {
+.day-original {
     margin-top: 10px;
 }
 
@@ -1064,6 +971,8 @@ body {
 
 .day-activity-name img {
     flex: none;
+    width: 28px;
+    height: 28px;
     object-fit: contain;
 }
 
@@ -1084,6 +993,46 @@ body {
     background: #edf5f6;
 }
 
+.day-activity-ai {
+    grid-template-columns: 5px minmax(0, 1fr) 36px 60px 36px 64px minmax(54px, 86px);
+}
+
+.day-activity-head {
+    min-height: 0;
+    margin-top: 10px;
+    border-bottom: 0;
+    font-weight: 700;
+}
+
+.day-activity-head .day-activity-quantity {
+    grid-column: 4;
+}
+
+.day-activity-head .day-activity-duration {
+    grid-column: 6;
+}
+
+.day-activity-head .day-activity-energy {
+    grid-column: 6;
+}
+
+.day-activity-ai.day-activity-head .day-activity-energy {
+    grid-column: 7;
+}
+
+.day-activity.alex-activity-row {
+    grid-template-columns: 5px minmax(0, 1fr) 4rem minmax(3.5rem, 5rem);
+}
+
+.alex-activity-row .day-activity-duration {
+    grid-column: 3;
+}
+
+.alex-activity-row .day-activity-energy {
+    grid-column: 4;
+}
+
+.day-activity-duration,
 .day-activity-quantity,
 .day-activity-energy {
     white-space: nowrap;
@@ -1095,6 +1044,7 @@ body {
     text-align: center;
 }
 
+.day-activity-duration,
 .day-activity-energy {
     text-align: right;
 }
@@ -1182,6 +1132,10 @@ body {
         font-size: 0.85rem;
     }
 
+    .day-activity-ai {
+        grid-template-columns: 4px minmax(0, 1fr) 32px 44px 32px 48px 52px;
+    }
+
     .day-activity-name {
         gap: 5px;
     }
@@ -1191,6 +1145,7 @@ body {
         height: 20px;
     }
 
+    .day-activity-duration,
     .day-activity-quantity,
     .day-activity-energy {
         font-size: 0.75rem;

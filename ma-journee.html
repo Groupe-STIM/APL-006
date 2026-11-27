@@ -30,9 +30,10 @@
                     <small>Équivalent à vélo</small>
                 </div>
             </div>
-            <div class="day-meter" id="day-energy-meter" aria-hidden="true">
-                <div class="day-energy-segments"></div>
+            <div class="day-meter" id="day-energy-meter">
+                <div class="day-energy-segments" role="group" aria-label="Consommation par activité"></div>
                 <span class="day-target-marker" hidden></span><span class="day-target-label" hidden></span>
+                <span class="energy-segment-tooltip" aria-hidden="true" hidden></span>
             </div>
             <div class="day-builder-row">
                 <small id="day-budget-status"></small>
@@ -81,12 +82,19 @@
 
         <section class="day-builder-section" aria-labelledby="day-digital-title">
             <div class="day-builder-row"><h2 id="day-digital-title">Mes activités numériques</h2><small>À la maison, en Wi-Fi</small></div>
-            <div class="day-builder-row day-list-header"><small>Activité</small><small>Durée · Énergie</small></div>
+            <div class="day-activity day-activity-head">
+                <small class="day-activity-quantity">Durée</small>
+                <small class="day-activity-energy">Énergie</small>
+            </div>
             <div id="day-digital-list"></div>
         </section>
         <section class="day-builder-section" aria-labelledby="day-ai-title">
             <h2 id="day-ai-title">Mes activités avec l’IA</h2>
-            <div class="day-builder-row day-list-header"><small>Activité</small><small>Quantité · Énergie</small></div>
+            <div class="day-activity day-activity-ai day-activity-head">
+                <small class="day-activity-quantity">Quantité</small>
+                <small class="day-activity-duration">Durée</small>
+                <small class="day-activity-energy">Énergie</small>
+            </div>
             <div id="day-ai-list"></div>
         </section>
 
@@ -115,10 +123,6 @@
             <div id="day-comparisons"></div>
             <p class="day-success day-summary-result">Défi réussi!</p>
         </section>
-        <footer class="day-return">
-            <a class="duel-arrow" href="bilan.html" aria-label="Retour au bilan numérique">←</a>
-        </footer>
-
         <template id="day-activity-template">
             <div class="day-activity">
                 <span class="day-activity-stripe" aria-hidden="true"></span>
@@ -126,6 +130,7 @@
                 <button class="day-step" type="button">−</button>
                 <output class="day-activity-quantity"></output>
                 <button class="day-step" type="button">+</button>
+                <output class="day-activity-duration" aria-label="Durée totale" hidden></output>
                 <output class="day-activity-energy"></output>
             </div>
         </template>
@@ -137,5 +142,8 @@
             </div>
         </template>
     </main>
+    <footer class="day-return day-builder-return">
+        <a class="duel-arrow" href="bilan.html" aria-label="Retour au bilan numérique">←</a>
+    </footer>
 </body>
 </html>

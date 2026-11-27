@@ -28,48 +28,72 @@
             </li>
         </template>
         <div class="alex-actions">
-            <button class="primary-button" type="button" data-dialog="alex-time-dialog" aria-haspopup="dialog">Répartition du temps</button>
             <button class="primary-button" type="button" data-dialog="alex-energy-dialog" aria-haspopup="dialog">Bilan énergétique</button>
         </div>
-        <dialog class="intro-dialog alex-dialog" id="alex-time-dialog" aria-labelledby="alex-time-title">
-            <header class="dialog-header">
-                <h2 id="alex-time-title">Répartition du temps</h2>
-                <form method="dialog"><button autofocus>Fermer</button></form>
-            </header>
-            <div class="alex-donut"><span id="alex-total-time"></span></div>
-            <ul class="alex-legend" id="alex-legend"></ul>
-        </dialog>
         <dialog class="intro-dialog alex-dialog alex-energy-dialog" id="alex-energy-dialog" aria-labelledby="alex-energy-title">
             <header class="dialog-header">
                 <h2 id="alex-energy-title">Le bilan de la journée</h2>
                 <form method="dialog"><button autofocus>Fermer</button></form>
             </header>
-            <div class="alex-energy-layout">
-                <div class="alex-energy-totals">
-                    <h3>Énergie</h3>
-                    <p class="alex-chart-total" id="alex-energy"></p>
-                    <p class="alex-chart-note alex-bike-time">
+            <section class="day-builder-section" aria-labelledby="alex-consumption-title">
+                <div class="day-builder-row">
+                    <div><h2 id="alex-consumption-title">Consommation énergétique</h2><p class="day-figure" id="alex-energy"></p></div>
+                    <div class="day-builder-bike">
                         <svg viewBox="0 0 24 18" fill="none" stroke="currentColor" aria-hidden="true" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="5" cy="12.5" r="4"/>
                             <circle cx="19" cy="12.5" r="4"/>
                             <path d="m5 12.5 4-7 4 7H5m4-7h7m-3 7 3-7m3 7-4.5-10H18M7.5 3.5h3"/>
                         </svg>
                         <span id="alex-bike"></span>
-                    </p>
-                    <h3>Émissions de GES</h3>
-                    <p class="alex-chart-total" id="alex-emissions"></p>
-                    <p class="alex-chart-note" id="alex-hydro"></p>
+                        <small>Équivalent à vélo</small>
+                    </div>
                 </div>
-                <div class="alex-energy-bar" id="alex-energy-stack" aria-hidden="true"></div>
-                <div class="alex-segment-labels">
-                    <svg class="alex-segment-links" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
-                    <ul class="alex-segment-legend" id="alex-segment-legend" aria-label="Énergie par activité"></ul>
+                <div class="day-meter">
+                    <div class="day-energy-segments" id="alex-energy-stack" role="group" aria-label="Consommation par activité"></div>
+                    <span class="energy-segment-tooltip" id="alex-energy-tooltip" aria-hidden="true" hidden></span>
                 </div>
-            </div>
+                <ul class="alex-segment-legend" id="alex-segment-legend" aria-label="Énergie par activité"></ul>
+            </section>
+            <section class="day-builder-section" aria-labelledby="alex-ges-title">
+                <div class="day-builder-row">
+                    <div><h2 id="alex-ges-title">Émissions de GES</h2><p class="day-figure" id="alex-emissions"></p></div>
+                    <small id="alex-hydro"></small>
+                </div>
+                <div class="day-meter" aria-hidden="true"><div class="day-meter-fill" id="alex-ges-fill"></div></div>
+            </section>
+            <section class="day-builder-section" aria-labelledby="alex-connected-title">
+                <h2 id="alex-connected-title">Temps connecté</h2>
+                <p class="day-figure" id="alex-connected-time"></p>
+                <div class="day-meter"><div class="day-meter-fill alex-connected-fill" id="alex-connected-fill"></div></div>
+            </section>
+            <section class="day-builder-section" aria-labelledby="alex-activities-title">
+                <h2 id="alex-activities-title">Activités numériques d’Alex</h2>
+                <div class="day-activity day-activity-head alex-activity-row">
+                    <small class="day-activity-duration">Durée</small>
+                    <small class="day-activity-energy">Énergie</small>
+                </div>
+                <div id="alex-activity-list"></div>
+            </section>
+            <section class="day-builder-section" aria-labelledby="alex-ai-title">
+                <h2 id="alex-ai-title">Activités d’Alex avec l’IA</h2>
+                <div class="day-activity day-activity-head alex-activity-row">
+                    <small class="day-activity-duration">Durée</small>
+                    <small class="day-activity-energy">Énergie</small>
+                </div>
+                <div id="alex-ai-list"></div>
+                <template id="alex-activity-row">
+                    <div class="day-activity alex-activity-row">
+                        <span class="day-activity-stripe" aria-hidden="true"></span>
+                        <div class="day-activity-name"><img alt="" width="28" height="28"><strong></strong></div>
+                        <span class="day-activity-duration"></span>
+                        <span class="day-activity-energy"></span>
+                    </div>
+                </template>
+            </section>
         </dialog>
-        <footer class="day-return">
-            <a class="duel-arrow" href="bilan.html" aria-label="Retour au bilan numérique">←</a>
-        </footer>
     </main>
+    <footer class="day-return day-builder-return">
+        <a class="duel-arrow" href="bilan.html" aria-label="Retour au bilan numérique">←</a>
+    </footer>
 </body>
 </html>

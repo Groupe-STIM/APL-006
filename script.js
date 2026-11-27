@@ -2,6 +2,28 @@ function emissionsFromEnergy(wattHours, factor) {
     return (wattHours / 1000) * factor;
 }
 
+function addEnergySegmentTooltip(segment, bar, tooltip, label) {
+    segment.tabIndex = 0;
+    segment.setAttribute('aria-label', label);
+
+    function show() {
+        tooltip.textContent = label;
+        tooltip.hidden = false;
+        const center = segment.offsetLeft + segment.offsetWidth / 2;
+        const halfWidth = tooltip.offsetWidth / 2;
+        tooltip.style.left = `${Math.max(halfWidth, Math.min(center, bar.clientWidth - halfWidth))}px`;
+    }
+
+    function hide() {
+        tooltip.hidden = true;
+    }
+
+    segment.addEventListener('pointerenter', show);
+    segment.addEventListener('pointerleave', hide);
+    segment.addEventListener('focus', show);
+    segment.addEventListener('blur', hide);
+}
+
 function activityIconPath(id) {
     return `images/${id === 'WEB-04a' ? 'WEB-04' : id}.png`;
 }
